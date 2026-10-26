@@ -87,7 +87,7 @@ function buildSpriteLibrary() {
       for (let r = 0; r < 3; r++) {
         const count = 14 - r * 3
         const dist = 24 - r * 7
-      for (let i = 0; i < showerCount; i++) {
+      for (let i = 0; i < count; i++) {
           ctx.save()
           ctx.rotate((i * Math.PI * 2) / count + r * 0.3)
           ctx.fillStyle = r % 2 ? c2 : c1
@@ -309,10 +309,10 @@ export function CelebrationCanvas({ disabled = false }: CelebrationCanvasProps) 
     const ctx = canvas.getContext('2d')!
     const sprites = buildSpriteLibrary()
 
-    const isMobile = w < 760
     let w = window.innerWidth
     let h = window.innerHeight
     let dpr = 1
+    const isMobile = w < 760
     let animId = 0
     let lastTime = 0
     let active = true
@@ -456,7 +456,7 @@ export function CelebrationCanvas({ disabled = false }: CelebrationCanvasProps) 
       const targetW = couple ? couple.w * 0.75 : w * 0.5
       const showerCount = isMobile ? Math.min(count, 45) : count
 
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < showerCount; i++) {
         particles.push({
           kind: 'grain',
           s: pick(sprites.grains),
@@ -484,13 +484,14 @@ export function CelebrationCanvas({ disabled = false }: CelebrationCanvasProps) 
     const spawnBurst = (x: number, y: number) => {
       const isCouple = currentScene === 'couple'
       const count = isCouple ? 40 : 25
+      const burstCount = isMobile ? Math.min(count, 12) : count
       const collection = isCouple
         ? sprites.grains
         : currentScene === 'final'
         ? sprites.lotus
         : sprites.flowers
 
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < burstCount; i++) {
         const angle = rand(0, Math.PI * 2)
         const speed = rand(60, 240)
         particles.push({
