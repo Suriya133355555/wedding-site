@@ -303,7 +303,7 @@ export function CelebrationCanvas({ disabled = false }: CelebrationCanvasProps) 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (disabled) return
+    if (disabled || window.innerWidth < 760) return
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')!

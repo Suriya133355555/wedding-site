@@ -1085,14 +1085,10 @@ export default function Page() {
     document.addEventListener('visibilitychange', onVisibility)
     mediaQuery.addEventListener('change', onMotionPreferenceChange)
 
-    Promise.allSettled(Array.from(root.querySelectorAll('img')).map((img) => img.decode())).then(
-      () => {
-        if (isRunning) {
-          setIsReady(true)
-          updateDimensions()
-        }
-      }
-    )
+    if (isRunning) {
+      setIsReady(true)
+      updateDimensions()
+    }
 
     updateDimensions()
 
