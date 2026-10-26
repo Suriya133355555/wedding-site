@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Karthikeyan & Divya Shree Wedding//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:karthikeyan-divyashree-wedding-2026@wedding
+DTSTAMP:20261026T000000Z
+DTSTART;TZID=Asia/Kolkata:20261101T073000
+DTEND;TZID=Asia/Kolkata:20261101T120000
+SUMMARY:Wedding of B.S. Karthikeyan & M. Divya Shree
+DESCRIPTION:With the blessings of our families, we cordially invite you to celebrate our wedding.\n\nReception: Saturday, 31 October 2026, 6:00 PM onwards\nMuhurtham: Sunday, 1 November 2026, 7:30 AM to 9:00 AM\n\nVenue: Jayam Mahal Thirumana Mandapam, No. 29, Ganapathi Nagar, Trichy Trunk Road, Villupuram, Tamil Nadu - 605602
+LOCATION:Jayam Mahal Thirumana Mandapam, No. 29, Ganapathi Nagar, Trichy Trunk Road, Villupuram, Tamil Nadu - 605602
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR
