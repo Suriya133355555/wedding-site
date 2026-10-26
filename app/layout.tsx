@@ -6,10 +6,6 @@ export const metadata: Metadata = {
   title: 'B.S. Karthikeyan & M. Divya Shree — Wedding Invitation',
   description:
     'Sri Aanai Kutty Muneeswaran Thunai / Sri Murugan Thunai. We cordially invite you to celebrate the wedding of B.S. Karthikeyan & M. Divya Shree on Sunday 1st November 2026 at Jayam Mahal Thirumana Mandapam, Villupuram.',
-  icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-  },
 }
 
 export const viewport: Viewport = {
