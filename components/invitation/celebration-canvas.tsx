@@ -87,7 +87,7 @@ function buildSpriteLibrary() {
       for (let r = 0; r < 3; r++) {
         const count = 14 - r * 3
         const dist = 24 - r * 7
-        for (let i = 0; i < count; i++) {
+      for (let i = 0; i < showerCount; i++) {
           ctx.save()
           ctx.rotate((i * Math.PI * 2) / count + r * 0.3)
           ctx.fillStyle = r % 2 ? c2 : c1
@@ -303,12 +303,13 @@ export function CelebrationCanvas({ disabled = false }: CelebrationCanvasProps) 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (disabled || window.innerWidth < 760) return
+    if (disabled) return
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')!
     const sprites = buildSpriteLibrary()
 
+    const isMobile = w < 760
     let w = window.innerWidth
     let h = window.innerHeight
     let dpr = 1
@@ -332,7 +333,7 @@ export function CelebrationCanvas({ disabled = false }: CelebrationCanvasProps) 
     const resize = () => {
       w = window.innerWidth
       h = window.innerHeight
-      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2)
       canvas.width = w * dpr
       canvas.height = h * dpr
       canvas.style.width = `${w}px`
@@ -453,6 +454,7 @@ export function CelebrationCanvas({ disabled = false }: CelebrationCanvasProps) 
       const couple = getCoupleBounds()
       const targetX = couple ? couple.x + couple.w * 0.5 : w * 0.5
       const targetW = couple ? couple.w * 0.75 : w * 0.5
+      const showerCount = isMobile ? Math.min(count, 45) : count
 
       for (let i = 0; i < count; i++) {
         particles.push({
