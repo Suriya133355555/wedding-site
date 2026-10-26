@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { GALLERY_PHOTOS } from './gallery-data'
 import { GalleryLightbox } from './gallery-lightbox'
 import { Maximize2 } from 'lucide-react'
@@ -38,11 +39,14 @@ export function CinematicGallery() {
           <div className="absolute bottom-1.5 right-1.5 w-3 h-3 border-b-2 border-r-2 border-[#ffd700]" />
 
           <div className="relative overflow-hidden aspect-[16/10] bg-[#1a0810] rounded-[1px]">
-            <img
+            <Image
               src={GALLERY_PHOTOS[0].src}
               alt={GALLERY_PHOTOS[0].title}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              width={768}
+              height={1376}
+              sizes="(max-width: 760px) 100vw, 58vw"
               loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
               <span className="text-[#ffffff] text-xs font-['Jost',sans-serif] flex items-center gap-1.5 font-medium">
@@ -75,11 +79,14 @@ export function CinematicGallery() {
           <div className="absolute bottom-1.5 right-1.5 w-3 h-3 border-b-2 border-r-2 border-[#ffd700]" />
 
           <div className="relative overflow-hidden aspect-[4/5] bg-[#1a0810] rounded-[1px]">
-            <img
+            <Image
               src={GALLERY_PHOTOS[1].src}
               alt={GALLERY_PHOTOS[1].title}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              width={1200}
+              height={670}
+              sizes="(max-width: 760px) 100vw, 42vw"
               loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
               <span className="text-[#ffffff] text-xs font-['Jost',sans-serif] flex items-center gap-1.5 font-medium">
@@ -109,11 +116,14 @@ export function CinematicGallery() {
             className="group relative md:col-span-4 bg-[#230b15]/90 p-2.5 border-2 border-[#e5b849] shadow-[0_15px_35px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(255,215,0,0.35)] transition-all duration-300 cursor-pointer rounded-[3px]"
           >
             <div className="relative overflow-hidden aspect-[3/4] bg-[#1a0810] rounded-[1px]">
-              <img
+              <Image
                 src={GALLERY_PHOTOS[idx].src}
                 alt={GALLERY_PHOTOS[idx].title}
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                width={[768, 1200, 1024][idx - 2]}
+                height={[1376, 670, 1024][idx - 2]}
+                sizes="(max-width: 760px) 100vw, 33vw"
                 loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               />
             </div>
             <div className="pt-2.5 px-1">
@@ -135,11 +145,14 @@ export function CinematicGallery() {
             className="group relative md:col-span-4 bg-[#230b15]/90 p-2.5 border-2 border-[#e5b849] shadow-[0_15px_35px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_45px_rgba(255,215,0,0.35)] transition-all duration-300 cursor-pointer rounded-[3px]"
           >
             <div className="relative overflow-hidden aspect-[4/3] bg-[#1a0810] rounded-[1px]">
-              <img
+              <Image
                 src={GALLERY_PHOTOS[idx].src}
                 alt={GALLERY_PHOTOS[idx].title}
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                width={[768, 1200, 1200][idx - 5]}
+                height={[1376, 655, 655][idx - 5]}
+                sizes="(max-width: 760px) 100vw, 33vw"
                 loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               />
             </div>
             <div className="pt-2.5 px-1">

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, memo } from 'react'
+import Image from 'next/image'
 import { ArrowDown, ArrowUpRight, CalendarDays, MapPin, QrCode, FileText } from 'lucide-react'
 import {
   CelebrationCanvas,
@@ -27,21 +28,25 @@ function OpeningAtmosphere() {
       aria-hidden="true"
     >
       <div className="cloud-plane cloud-plane-left" data-air-depth="-22">
-        <img
+        <Image
           className="intro-cloud cloud-left"
           src="/art/cloud.webp"
           alt=""
-          width={1280}
-          height={853}
+          width={1200}
+          height={502}
+          sizes="(max-width: 760px) 100vw, 78vw"
+          loading="lazy"
         />
       </div>
       <div className="cloud-plane cloud-plane-right" data-air-depth="-12">
-        <img
+        <Image
           className="intro-cloud cloud-right"
           src="/art/cloud.webp"
           alt=""
-          width={1280}
-          height={853}
+          width={1200}
+          height={502}
+          sizes="(max-width: 760px) 100vw, 73vw"
+          loading="lazy"
         />
       </div>
 
@@ -153,23 +158,30 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
           </p>
         </div>
 
-        <img
+        <Image
           className="opening-temple art"
           data-layer="opening-temple"
           src="/art/temple.webp"
           alt="Traditional Dravidian temple gopuram rising majestically into the sky"
-          fetchPriority="high"
+          width={1100}
+          height={1849}
+          sizes="(max-width: 760px) 100vw, min(92vw, 1220px)"
+          priority
         />
       </div>
 
       {/* SCENE 2: GATE SCENE - THE AUSPICIOUS INVITATION CARD */}
       <section className="film-scene gate-scene" data-scene="gate" aria-label="The wedding invitation">
         <div className="paper-fill" />
-        <img
+        <Image
           className="gate-frame frame-art art"
           data-layer="gate-frame"
           src="/art/gate.webp"
           alt="Carved wedding gateway with jasmine garlands and auspicious brass lamps"
+          width={1376}
+          height={768}
+          sizes="(max-width: 760px) 100vw, 110vw"
+          loading="lazy"
         />
 
         {/* High Contrast Royal Burgundy & Gold Invitation Plaque */}
@@ -241,7 +253,7 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         aria-label="Reception and Muhurtham celebrations"
       >
         <div className="paper-fill" />
-        <img className="event-surround frame-art art" data-layer="event-surround" src="/art/gate.webp" alt="" />
+        <Image className="event-surround frame-art art" data-layer="event-surround" src="/art/gate.webp" alt="" width={1376} height={768} sizes="(max-width: 760px) 100vw, 118vw" loading="lazy" />
         <p className="events-label eyebrow tracking-[0.25em] text-[#ffd700] font-semibold drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
           AUSPICIOUS CELEBRATIONS &amp; CEREMONIES
         </p>
@@ -258,9 +270,13 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
                 }}
               >
                 <div className="event-portrait border border-[#e5b849]/60">
-                  <img
+                  <Image
                     src={idx === 0 ? '/images/couple.webp' : '/images/hands.webp'}
                     alt={ev.title}
+                    width={1536}
+                    height={1024}
+                    sizes="(max-width: 760px) 100vw, 43vw"
+                    loading="lazy"
                   />
                 </div>
                 <div className="event-copy">
@@ -303,13 +319,17 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
       {/* SCENE 4: BRIDE & GROOM SCENE WITH AKSHANTALU SHOWER */}
       <section className="film-scene couple-scene" data-scene="couple" aria-label="The bride and groom">
         <div className="couple-sky" />
-        <img className="couple-temple temple-side left art" src="/art/temple.webp" alt="" />
-        <img className="couple-temple temple-side right art" src="/art/temple.webp" alt="" />
-        <img
+        <Image className="couple-temple temple-side left art" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 100vw, 49vw" loading="lazy" />
+        <Image className="couple-temple temple-side right art" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 100vw, 49vw" loading="lazy" />
+        <Image
           className="couple-temple main-temple art"
           data-layer="couple-temple"
           src="/art/temple.webp"
           alt="Sacred temple gopuram behind the bride and groom"
+          width={1100}
+          height={1849}
+          sizes="(max-width: 760px) 100vw, 80vw"
+          loading="lazy"
         />
 
         <div className="couple-heading" data-layer="couple-heading">
@@ -318,11 +338,15 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
           </span>
         </div>
 
-        <img
+        <Image
           className="illustrated-couple art"
           data-layer="illustrated-couple"
           src="/art/couple.webp"
           alt="Illustrated South Indian bride and groom holding auspicious wedding garlands"
+          width={900}
+          height={1512}
+          sizes="(max-width: 760px) 100vw, 74vw"
+          loading="lazy"
         />
 
         <BlessingControls />
@@ -335,11 +359,7 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         aria-label="Meet the bride and groom"
       >
         <div className="arch-paper" />
-        <img
-          className="plum-frame frame-art art"
-          src="/art/plum.webp"
-          alt="Plum and antique gold wedding arch"
-        />
+        <Image className="plum-frame frame-art art" src="/art/plum.webp" alt="Plum and antique gold wedding arch" width={1376} height={768} sizes="(max-width: 760px) 100vw, 110vw" loading="lazy" />
 
         <div className="portrait-intro-anchor" data-layer="portrait-intro">
         <div className="portrait-intro">
@@ -356,18 +376,22 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         </div>
 
         <figure className="gold-portrait" data-layer="gold-portrait" data-tilt="10">
-          <img
+          <Image
             src="/images/couple.webp"
             alt="Bride and Groom B.S. Karthikeyan & M. Divya Shree"
+            width={1536}
+            height={1024}
+            sizes="(max-width: 760px) 100vw, min(48vw, 260px)"
+            loading="lazy"
           />
         </figure>
 
         <div className="temple-procession" data-layer="temple-procession">
-          <img className="procession-temple temple-0" src="/art/temple.webp" alt="" />
-          <img className="procession-temple temple-1" src="/art/temple.webp" alt="" />
-          <img className="procession-temple temple-2" src="/art/temple.webp" alt="" />
-          <img className="procession-temple temple-3" src="/art/temple.webp" alt="" />
-          <img className="procession-temple temple-4" src="/art/temple.webp" alt="" />
+          <Image className="procession-temple temple-0" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
+          <Image className="procession-temple temple-1" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
+          <Image className="procession-temple temple-2" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
+          <Image className="procession-temple temple-3" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
+          <Image className="procession-temple temple-4" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
         </div>
       </section>
 
@@ -379,7 +403,7 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         style={{ overflowY: 'auto' }}
       >
         <div className="arch-paper" />
-        <img className="plum-frame frame-art art" src="/art/plum.webp" alt="" />
+        <Image className="plum-frame frame-art art" src="/art/plum.webp" alt="" width={1376} height={768} sizes="(max-width: 760px) 100vw, 110vw" loading="lazy" />
 
         <div className="venue-copy-anchor" data-layer="venue-copy">
         <div className="venue-copy">
@@ -467,11 +491,15 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         </div>
         </div>
 
-        <img
+        <Image
           className="venue-temple art"
           data-layer="venue-temple"
           src="/art/temple.webp"
           alt="Golden temple illustration below venue details"
+          width={1100}
+          height={1849}
+          sizes="(max-width: 760px) 100vw, 60vw"
+          loading="lazy"
         />
       </section>
 
@@ -479,7 +507,7 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
       <section className="film-scene countdown-scene" data-scene="countdown" aria-label="Counting down to the Muhurtham">
         <div className="paper-fill" />
         <div className="memories-ornament" aria-hidden="true">
-          <img src="/art/gate.webp" alt="" />
+          <Image src="/art/gate.webp" alt="" width={1376} height={768} sizes="(max-width: 760px) 100vw, 100vw" loading="lazy" />
         </div>
 
         <div className="countdown-heading" data-layer="countdown-heading">
@@ -517,11 +545,15 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
 
       {/* SCENE 9: FINAL AUSPICIOUS BLESSING SCENE */}
       <section className="film-scene final-scene" data-scene="final" aria-label="With compliments and save the date">
-        <img
+        <Image
           className="final-landscape art"
           data-layer="final-landscape"
           src="/art/landscape.webp"
           alt="Sacred South Indian temple landscape framed by palms and hills"
+          width={1376}
+          height={768}
+          sizes="(max-width: 760px) 100vw, 100vw"
+          loading="lazy"
         />
 
         <div className="final-words-anchor" data-layer="final-words">
