@@ -100,8 +100,8 @@ export function EventsDialog({ eventIndex, onClose }: EventsDialogProps) {
         </p>
 
         <div className="dialog-date border-t border-[#cfb986] pt-4 mb-3 text-[16px] md:text-[17px] leading-normal font-['Jost',sans-serif]">
-          <p className="font-medium text-[#FFF0C2]">{event.date}</p>
-          <p className="text-[#FFF9E6] text-[15px]">{event.time}</p>
+          <p className="font-medium text-[#d4a337]">{event.date}</p>
+          <p className="text-[#ffd700] text-[15px]">{event.time}</p>
         </div>
 
         <div className="mb-6 font-['Jost',sans-serif]">

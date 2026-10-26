@@ -2615,7 +2615,7 @@ em {
 .final-title em{color:#EFBF04;font-style:italic}
 .final-couple{margin:8px 0 4px;font:400 clamp(20px,5.4vw,32px)/1.2 Cormorant,Georgia,serif;color:#EFBF04}
 .final-couple em{margin:0 4px;color:#fff1d2}
-.final-date{display:block;margin-top:6px;font-size:clamp(10px,2.5vw,12px);letter-spacing:.18em;color:#ffe7b0;font-weight:500}
+.final-date{display:block;margin-top:6px;font-size:clamp(10px,2.5vw,12px);letter-spacing:.18em;color:#d4a337;font-weight:500}
 .final-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
 .final-btn{
   position:relative;overflow:hidden;

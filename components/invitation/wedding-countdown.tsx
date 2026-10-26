@@ -43,7 +43,7 @@ export function WeddingCountdown() {
           >
             {digits[idx]}
           </span>
-          <small className="block mt-2 text-[#ffffff] text-[10px] md:text-[12px] font-medium tracking-wider uppercase font-['Jost',sans-serif] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+          <small className="block mt-2 text-[#ffffff] text-[10px] md:text-[12px] font-medium tracking-wider uppercase font-['Jost',sans-serif]">
             {label}
           </small>
         </div>

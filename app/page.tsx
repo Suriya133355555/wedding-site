@@ -12,7 +12,6 @@ import {
 } from '@/components/invitation/celebration-canvas'
 import { EventsDialog, WEDDING_EVENTS, MAPS_URL } from '@/components/invitation/events-dialog'
 import { WeddingCountdown } from '@/components/invitation/wedding-countdown'
-import { CinematicGallery } from '@/components/invitation/cinematic-gallery'
 import { ScrollGuide } from '@/components/invitation/scroll-guide'
 
 const clamp = (v: number) => Math.max(0, Math.min(1, v))
@@ -88,6 +87,9 @@ function BlessingControls() {
       className="blessing-controls"
       data-layer="blessing-controls"
       style={{
+        position: 'relative',
+        zIndex: 20,
+        marginTop: '-40px',
         background: 'linear-gradient(135deg, rgba(40, 12, 20, 0.94), rgba(22, 6, 11, 0.97))',
         border: '1.5px solid #e5b849',
         boxShadow: '0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(229,184,73,0.3)',
@@ -106,7 +108,7 @@ function BlessingControls() {
         }}
         onClick={() => window.dispatchEvent(new Event(SHOWER_EVENT))}
       >
-        Shower akshantalu <span aria-hidden="true">✦</span>
+        Shower akshantalu
       </button>
       <p className="tap-hint text-[#FFF9E6]">
         Tap anywhere to bless the couple
@@ -125,9 +127,13 @@ function BlessingControls() {
 interface FilmStageProps {
   onDetails: (index: number) => void
   onOpenQr: () => void
+  activeEventIndex: number
+  onEventSlide: (index: number) => void
+  onEventTouchStart: (e: React.TouchEvent) => void
+  onEventTouchEnd: (e: React.TouchEvent) => void
 }
 
-const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProps) {
+const FilmStage = memo(function FilmStage({ onDetails, onOpenQr, activeEventIndex, onEventSlide, onEventTouchStart, onEventTouchEnd }: FilmStageProps) {
   return (
     <main
       className="film-stage"
@@ -150,8 +156,11 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
           <h1 className="my-3 text-[#722f37] drop-shadow-[0_4px_18px_rgba(0,0,0,0.8)]">
             Karthikeyan<span className="text-[#ffd700]">&amp;</span>Divya Shree
           </h1>
-          <p className="opening-date text-[18px] md:text-[20px] font-semibold tracking-wide text-[#ffd700] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            Sunday, 1 November 2026
+          <p className="opening-date text-[18px] md:text-[20px] font-semibold tracking-wide text-[#ffd700] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
+            Reception: Saturday, 31 October 2026 · 6:00 pm onwards
+          </p>
+          <p className="opening-date text-[18px] md:text-[20px] font-semibold tracking-wide text-[#ffd700] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
+            Muhurtham: Sunday, 1 November 2026 · 7:30 am – 9:00 am IST
           </p>
           <p className="eyebrow tiny text-[#ffffff] tracking-[0.22em] font-medium drop-shadow-[0_1px_5px_rgba(0,0,0,0.8)]">
             JAYAM MAHAL · VILLUPURAM
@@ -171,7 +180,11 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
       </div>
 
       {/* SCENE 2: GATE SCENE - THE AUSPICIOUS INVITATION CARD */}
-      <section className="film-scene gate-scene" data-scene="gate" aria-label="The wedding invitation">
+      <section
+        className="film-scene gate-scene"
+        data-scene="gate"
+        aria-label="The wedding invitation"
+      >
         <div className="paper-fill" />
         <Image
           className="gate-frame frame-art art"
@@ -186,63 +199,67 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
 
         {/* High Contrast Royal Burgundy & Gold Invitation Plaque */}
         <div className="invitation-words-anchor" data-layer="invitation-words">
-        <div
-          className="invitation-words"
-          style={{
-            background: 'linear-gradient(145deg, rgba(46, 12, 22, 0.94), rgba(24, 6, 12, 0.97))',
-            border: '2px solid #e5b849',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.7), 0 0 35px rgba(229,184,73,0.3)',
-            borderRadius: '4px',
-            padding: '24px 28px',
-          }}
-        >
-          <span className="eyebrow text-[#ffd700] tracking-[0.2em] font-semibold">
-            IN THE PRESENCE OF LOVE &amp; TRADITION
-          </span>
-          <h2 className="my-2 text-[38px] md:text-[56px] text-[#ffffff] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-            <em>Wedding Invitation</em>
-          </h2>
-
-          <div className="my-2.5 leading-relaxed">
-            <p className="font-semibold text-[#ffe082] text-[16px] md:text-[18px] mb-1 tracking-wide">
-              Mr. B. SEETHARAMAN &amp; Mrs. S. SARASWATHI
-            </p>
-            <p className="text-[13px] md:text-[14px] text-[#ffe082] max-w-lg mx-auto leading-relaxed">
-              cordially invite you and solicit your gracious presence and blessings with family and friends
-              on the occasion of the wedding of their son
-            </p>
-          </div>
-
-          <div className="my-3">
-            <h3 className="text-[28px] md:text-[40px] text-[#ffffff] font-normal leading-tight">
-              <span className="text-[15px] md:text-[18px] text-[#ffd700] italic block md:inline md:mr-2 font-medium">
-                Selvan:
-              </span>
-              B.S. Karthikeyan
-            </h3>
-            <span className="text-[#ffd700] font-['Cormorant',Georgia,serif] italic text-[20px] md:text-[24px] my-0.5 block">
-              with
+          <div
+            className="invitation-words"
+            style={{
+              background:
+                "linear-gradient(145deg, rgba(46, 12, 22, 0.94), rgba(24, 6, 12, 0.97))",
+              border: "2px solid #e5b849",
+              boxShadow:
+                "0 20px 60px rgba(0,0,0,0.7), 0 0 35px rgba(229,184,73,0.3)",
+              borderRadius: "4px",
+              padding: "24px 28px",
+            }}
+          >
+            <span className="eyebrow text-[#ffd700] tracking-[0.2em] font-semibold">
+              IN THE PRESENCE OF LOVE &amp; TRADITION
             </span>
-            <h3 className="text-[28px] md:text-[40px] text-[#ffffff] font-normal leading-tight">
-              <span className="text-[15px] md:text-[18px] text-[#ffd700] italic block md:inline md:mr-2 font-medium">
-                Selvi:
+            <h2 className="my-2 text-[38px] md:text-[56px] text-[#ffffff] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+              <em>Wedding Invitation</em>
+            </h2>
+
+            <div className="my-2.5 leading-relaxed">
+              <p className="font-semibold text-[#ffe082] text-[16px] md:text-[18px] mb-1 tracking-wide">
+                Mr. B. SEETHARAMAN &amp; Mrs. S. SARASWATHI
+              </p>
+              <p className="text-[13px] md:text-[14px] text-[#ffe082] max-w-lg mx-auto leading-relaxed">
+                cordially invite you and solicit your gracious presence and
+                blessings with family and friends on the occasion of the wedding
+                of their son
+              </p>
+            </div>
+
+            <div className="my-3">
+              <h3 className="text-[28px] md:text-[40px] text-[#ffffff] font-normal leading-tight">
+                <span className="text-[15px] md:text-[18px] text-[#ffd700] italic block md:inline md:mr-2 font-medium">
+                  Selvan:
+                </span>
+                B.S. Karthikeyan
+              </h3>
+              <span className="text-[#ffd700] font-['Cormorant',Georgia,serif] italic text-[20px] md:text-[24px] my-0.5 block">
+                with
               </span>
-              M. Divya Shree
-            </h3>
+              <h3 className="text-[28px] md:text-[40px] text-[#ffffff] font-normal leading-tight">
+                <span className="text-[15px] md:text-[18px] text-[#ffd700] italic block md:inline md:mr-2 font-medium">
+                  Selvi:
+                </span>
+                M. Divya Shree
+              </h3>
+            </div>
+
+            <div className="w-20 h-[1.5px] bg-[#e5b849] mx-auto my-3" />
+
+            <p className="text-[#d4a337] text-[14px] md:text-[15px] leading-relaxed">
+              On Sunday 1st November 2026, between 7:30 a.m. to 9:00 a.m.
+              <br />
+              at{" "}
+              <b className="text-[#ffd700]">Jayam Mahal Thirumana Mandapam</b>,
+            </p>
+
+            <span className="eyebrow block mt-3 text-[#ffd700] tracking-[0.2em] font-medium text-[11px]">
+              VILLUPURAM, TAMIL NADU
+            </span>
           </div>
-
-          <div className="w-20 h-[1.5px] bg-[#e5b849] mx-auto my-3" />
-
-          <p className="text-[#ffe082] text-[14px] md:text-[15px] leading-relaxed">
-            On Sunday 1st November 2026, between 7:30 a.m. to 9:00 a.m.
-            <br />
-            at <b className="text-[#ffd700]">Jayam Mahal Thirumana Mandapam</b>, Villupuram
-          </p>
-
-          <span className="eyebrow block mt-3 text-[#ffd700] tracking-[0.2em] font-medium text-[11px]">
-            01-11-2026 · VILLUPURAM, TAMIL NADU
-          </span>
-        </div>
         </div>
       </section>
 
@@ -253,25 +270,47 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         aria-label="Reception and Muhurtham celebrations"
       >
         <div className="paper-fill" />
-        <Image className="event-surround frame-art art" data-layer="event-surround" src="/art/gate.webp" alt="" width={1376} height={768} sizes="(max-width: 760px) 100vw, 118vw" loading="lazy" />
+        <Image
+          className="event-surround frame-art art"
+          data-layer="event-surround"
+          src="/art/gate.webp"
+          alt=""
+          width={1376}
+          height={768}
+          sizes="(max-width: 760px) 100vw, 118vw"
+          loading="lazy"
+        />
         <p className="events-label eyebrow tracking-[0.25em] text-[#ffd700] font-semibold drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
           AUSPICIOUS CELEBRATIONS &amp; CEREMONIES
         </p>
 
-        <div className="event-window" data-layer="event-window" data-tilt="5">
-          <div className="event-reel" data-layer="event-reel">
+        <div
+          className="event-window"
+          data-layer="event-window"
+          data-tilt="5"
+          onTouchStart={onEventTouchStart}
+          onTouchEnd={onEventTouchEnd}
+        >
+          <div
+            className="event-reel"
+            data-layer="event-reel"
+            style={{ transform: `translateX(-${activeEventIndex * 50}%)` }}
+          >
             {WEDDING_EVENTS.map((ev, idx) => (
               <article
                 key={ev.title}
                 className="event-invitation"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(46, 14, 24, 0.96), rgba(28, 7, 14, 0.98))',
-                  border: '1.5px solid #d4a337',
+                  background:
+                    "linear-gradient(135deg, rgba(46, 14, 24, 0.96), rgba(28, 7, 14, 0.98))",
+                  border: "1.5px solid #d4a337",
                 }}
               >
                 <div className="event-portrait border border-[#e5b849]/60">
                   <Image
-                    src={idx === 0 ? '/images/couple.webp' : '/images/hands.webp'}
+                    src={
+                      idx === 0 ? "/images/couple.webp" : "/images/hands.webp"
+                    }
                     alt={ev.title}
                     width={1536}
                     height={1024}
@@ -280,25 +319,30 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
                   />
                 </div>
                 <div className="event-copy">
-                  <span className="eyebrow tracking-[0.18em] text-[#ffd700] font-semibold">
-                    {idx === 0 ? 'CELEBRATION EVENING' : 'SACRED VOWS & WEDDING FEAST'}
+                  <span className="eyebrow tracking-[0.18em] text-[#ffffff] font-semibold">
+                    {idx === 0
+                      ? "CELEBRATION EVENING"
+                      : "SACRED VOWS & WEDDING FEAST"}
                   </span>
                   <h2 className="text-[#ffffff] drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
                     {ev.title}
                   </h2>
-                  <p className="font-semibold text-[#ffe082]">
+                  <p className="font-semibold text-[#ffd700]">
                     {ev.date}
                     <br />
-                    <span className="text-[#ffffff] font-normal">{ev.time}</span>
+                    <span className="text-[#ffd700] font-normal">
+                      {ev.time}
+                    </span>
                   </p>
                   <p className="event-short text-[#ffe082]">{ev.copy}</p>
                   <button
                     className="gold-button"
                     style={{
-                      background: 'linear-gradient(135deg, #d4a337, #ffd700 55%, #b3801f)',
-                      color: '#240a13',
+                      background:
+                        "linear-gradient(135deg, #d4a337, #ffd700 55%, #b3801f)",
+                      color: "#240a13",
                       fontWeight: 600,
-                      boxShadow: '0 6px 20px rgba(0,0,0,0.4)',
+                      boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
                     }}
                     onClick={() => onDetails(idx)}
                   >
@@ -308,6 +352,29 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
               </article>
             ))}
           </div>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEventSlide(activeEventIndex - 1);
+            }}
+            disabled={activeEventIndex === 0}
+            aria-label="Previous celebration"
+            className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-[#d4a337] text-[#240a13] font-bold shadow-lg hover:scale-110 transition-transform ${activeEventIndex === 0 ? "opacity-40 cursor-not-allowed" : "pointer-events-auto"}`}
+          >
+            ‹
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEventSlide(activeEventIndex + 1);
+            }}
+            disabled={activeEventIndex === 1}
+            aria-label="Next celebration"
+            className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-[#d4a337] text-[#240a13] font-bold shadow-lg hover:scale-110 transition-transform ${activeEventIndex === 1 ? "opacity-40 cursor-not-allowed" : "pointer-events-auto"}`}
+          >
+            ›
+          </button>
         </div>
 
         <div className="event-pips">
@@ -317,10 +384,30 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
       </section>
 
       {/* SCENE 4: BRIDE & GROOM SCENE WITH AKSHANTALU SHOWER */}
-      <section className="film-scene couple-scene" data-scene="couple" aria-label="The bride and groom">
+      <section
+        className="film-scene couple-scene"
+        data-scene="couple"
+        aria-label="The bride and groom"
+      >
         <div className="couple-sky" />
-        <Image className="couple-temple temple-side left art" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 100vw, 49vw" loading="lazy" />
-        <Image className="couple-temple temple-side right art" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 100vw, 49vw" loading="lazy" />
+        <Image
+          className="couple-temple temple-side left art"
+          src="/art/temple.webp"
+          alt=""
+          width={1100}
+          height={1849}
+          sizes="(max-width: 760px) 100vw, 49vw"
+          loading="lazy"
+        />
+        <Image
+          className="couple-temple temple-side right art"
+          src="/art/temple.webp"
+          alt=""
+          width={1100}
+          height={1849}
+          sizes="(max-width: 760px) 100vw, 49vw"
+          loading="lazy"
+        />
         <Image
           className="couple-temple main-temple art"
           data-layer="couple-temple"
@@ -352,143 +439,116 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         <BlessingControls />
       </section>
 
-      {/* SCENE 5: MEET THE BRIDE & GROOM WITH COUPLE PORTRAIT */}
-      <section
-        className="film-scene portrait-scene plum-scene"
-        data-scene="portrait"
-        aria-label="Meet the bride and groom"
-      >
-        <div className="arch-paper" />
-        <Image className="plum-frame frame-art art" src="/art/plum.webp" alt="Plum and antique gold wedding arch" width={1376} height={768} sizes="(max-width: 760px) 100vw, 110vw" loading="lazy" />
-
-        <div className="portrait-intro-anchor" data-layer="portrait-intro">
-        <div className="portrait-intro">
-          <span className="eyebrow tracking-[0.22em] text-[#ffd700] block mb-2 font-semibold drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-            MEET THE BRIDE &amp; GROOM
-          </span>
-          <h2 className="text-[34px] md:text-[54px] text-[#ffffff] font-normal leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            B.S. Karthikeyan <em className="text-[#ffd700]">&amp;</em> M. Divya Shree
-          </h2>
-          <p className="text-[#ffe082] text-[15px] md:text-[17px] max-w-md mx-auto mt-2 leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-            Together with our families, embarking on our sacred journey of forever.
-          </p>
-        </div>
-        </div>
-
-        <figure className="gold-portrait" data-layer="gold-portrait" data-tilt="10">
-          <Image
-            src="/images/couple.webp"
-            alt="Bride and Groom B.S. Karthikeyan & M. Divya Shree"
-            width={1536}
-            height={1024}
-            sizes="(max-width: 760px) 100vw, min(48vw, 260px)"
-            loading="lazy"
-          />
-        </figure>
-
-        <div className="temple-procession" data-layer="temple-procession">
-          <Image className="procession-temple temple-0" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
-          <Image className="procession-temple temple-1" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
-          <Image className="procession-temple temple-2" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
-          <Image className="procession-temple temple-3" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
-          <Image className="procession-temple temple-4" src="/art/temple.webp" alt="" width={1100} height={1849} sizes="(max-width: 760px) 41vw, 26vw" loading="lazy" />
-        </div>
-      </section>
-
       {/* SCENE 6: VENUE & ACCESSIBLE GOOGLE MAPS SECTION */}
       <section
         className="film-scene venue-scene plum-scene"
         data-scene="venue"
         aria-label="The wedding venue and location"
-        style={{ overflowY: 'auto' }}
+        style={{ overflowY: "auto" }}
       >
         <div className="arch-paper" />
-        <Image className="plum-frame frame-art art" src="/art/plum.webp" alt="" width={1376} height={768} sizes="(max-width: 760px) 100vw, 110vw" loading="lazy" />
+        <Image
+          className="plum-frame frame-art art"
+          src="/art/plum.webp"
+          alt=""
+          width={1376}
+          height={768}
+          sizes="(max-width: 760px) 100vw, 110vw"
+          loading="lazy"
+        />
 
         <div className="venue-copy-anchor" data-layer="venue-copy">
-        <div className="venue-copy">
-          <span className="eyebrow tracking-[0.22em] text-[#ffd700] font-semibold drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-            WHERE OUR FOREVER BEGINS · VENUE &amp; LOCATION
-          </span>
-          <h2 className="my-1.5 text-[32px] md:text-[52px] text-[#ffffff] font-normal leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            Jayam Mahal
-            <br />
-            <em className="text-[#ffd700]">Thirumana Mandapam</em>
-          </h2>
+          <div className="venue-copy">
+            <span className="eyebrow tracking-[0.22em] text-[#ffd700] font-semibold drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
+              WHERE OUR FOREVER BEGINS · VENUE &amp; LOCATION
+            </span>
+            <h2 className="my-1.5 text-[32px] md:text-[52px] text-[#ffffff] font-normal leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              Jayam Mahal
+              <br />
+              <em className="text-[#ffd700]">Thirumana Mandapam</em>
+            </h2>
 
-          <div className="text-[14px] md:text-[15px] text-[#ffe082] leading-relaxed max-w-lg mx-auto drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
-            <p className="font-semibold text-[#ffffff]">No. 29, Ganapathi Nagar, Trichy Trunk Road,</p>
-            <p>Villupuram, Tamil Nadu - 605602</p>
-          </div>
+            <div className="text-[14px] md:text-[15px] text-[#ffe082] leading-relaxed max-w-lg mx-auto drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+              <p className="font-semibold text-[#ffffff]">
+                No. 29, Ganapathi Nagar, Trichy Trunk Road,
+              </p>
+              <p>Villupuram, Tamil Nadu - 605602</p>
+            </div>
 
-          <div className="w-20 h-[1.5px] bg-[#ffd700] mx-auto my-2.5" />
+            <div className="w-20 h-[1.5px] bg-[#ffd700] mx-auto my-2.5" />
 
-          {/* Interactive Accessible Map & QR Code from Invitation */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 max-w-xl mx-auto my-3 items-stretch text-left">
-            {/* Interactive Accessible Map */}
-            <div className="md:col-span-7 bg-[#240b15]/95 p-2.5 border-2 border-[#e5b849] rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.7)] flex flex-col justify-between">
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[1px] bg-[#1a0810]">
-                <iframe
-                  title="Interactive Map for Jayam Mahal Thirumana Mandapam, Villupuram"
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=79.47,11.92,79.51,11.96&layer=mapnik&marker=11.942,79.492"
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                />
+            {/* Interactive Accessible Map & QR Code from Invitation */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 max-w-xl mx-auto my-3 items-stretch text-left">
+              {/* Interactive Accessible Map */}
+              <div className="md:col-span-7 bg-[#240b15]/95 p-2.5 border-2 border-[#e5b849] rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.7)] flex flex-col justify-between">
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[1px] bg-[#1a0810]">
+                  <iframe
+                    title="Interactive Map for Jayam Mahal Thirumana Mandapam, Villupuram"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=79.47,11.92,79.51,11.96&layer=mapnik&marker=11.942,79.492"
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="pt-2 px-1 flex items-center justify-between text-[11px] text-[#ffe082] font-['Jost',sans-serif]">
+                  <span>Jayam Mahal · Villupuram</span>
+                  <a
+                    href={MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-[#ffd700] font-medium"
+                  >
+                    View Large Map ↗
+                  </a>
+                </div>
               </div>
-              <div className="pt-2 px-1 flex items-center justify-between text-[11px] text-[#ffe082] font-['Jost',sans-serif]">
-                <span>Jayam Mahal · Villupuram</span>
-                <a
-                  href={MAPS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-[#ffd700] font-medium"
-                >
-                  View Large Map ↗
-                </a>
+
+              {/* Actual QR Code from Printed Invitation */}
+              <div className="md:col-span-5 bg-[#240b15]/95 p-2.5 border-2 border-[#e5b849] rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.7)] text-center flex flex-col items-center justify-between">
+                <span className="eyebrow text-[10px] tracking-[0.2em] text-[#ffd700] block mb-0.5 uppercase font-semibold">
+                  FROM PRINTED INVITATION
+                </span>
+                <div className="relative p-1 bg-white border border-[#cfb986] rounded-sm shadow-inner my-1">
+                  <img
+                    src="/invitation-qr.png"
+                    alt="Scan for Location QR Code from actual wedding invitation"
+                    className="w-24 h-24 md:w-28 md:h-28 object-contain"
+                  />
+                </div>
+                <p className="text-[11px] text-[#ffe082] font-['Jost',sans-serif] leading-tight">
+                  Scan with camera for GPS navigation
+                </p>
               </div>
             </div>
 
-            {/* Actual QR Code from Printed Invitation */}
-            <div className="md:col-span-5 bg-[#240b15]/95 p-2.5 border-2 border-[#e5b849] rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.7)] text-center flex flex-col items-center justify-between">
-              <span className="eyebrow text-[10px] tracking-[0.2em] text-[#ffd700] block mb-0.5 uppercase font-semibold">
-                FROM PRINTED INVITATION
-              </span>
-              <div className="relative p-1 bg-white border border-[#cfb986] rounded-sm shadow-inner my-1">
-                <img
-                  src="/invitation-qr.png"
-                  alt="Scan for Location QR Code from actual wedding invitation"
-                  className="w-24 h-24 md:w-28 md:h-28 object-contain"
-                />
-              </div>
-              <p className="text-[11px] text-[#ffe082] font-['Jost',sans-serif] leading-tight">
-                Scan with camera for GPS navigation
+            <div className="text-[13px] md:text-[14px] text-[#ffe082] mb-3 leading-snug">
+              <p>
+                <b className="text-[#ffd700]">Reception:</b> Saturday, 31
+                October 2026 · 6:00 pm onwards
+              </p>
+              <p>
+                <b className="text-[#ffd700]">Muhurtham:</b><span className="text-[#d4a337]"> Sunday, 1 November
+                2026 · 7:30 am – 9:00 am</span>
               </p>
             </div>
-          </div>
 
-          <div className="text-[13px] md:text-[14px] text-[#ffe082] mb-3 leading-snug">
-            <p><b className="text-[#ffd700]">Reception:</b> Saturday, 31 October 2026 · 6:00 pm onwards</p>
-            <p><b className="text-[#ffd700]">Muhurtham:</b> Sunday, 1 November 2026 · 7:30 am – 9:00 am</p>
-          </div>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <a
+                className="gold-button wine-button inline-flex items-center gap-2 px-5 py-2.5 text-[13px] rounded-sm text-[#ffffff] bg-[var(--wine)] hover:bg-[#7d4954] border border-[#ffd700]/50 transition-colors shadow-md"
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Get Directions in Google Maps <MapPin size={15} />
+              </a>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a
-              className="gold-button wine-button inline-flex items-center gap-2 px-5 py-2.5 text-[13px] rounded-sm text-[#ffffff] bg-[var(--wine)] hover:bg-[#7d4954] border border-[#ffd700]/50 transition-colors shadow-md"
-              href={MAPS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Get Directions in Google Maps <MapPin size={15} />
-            </a>
-
-            <button
-              className="gold-button inline-flex items-center gap-2 px-5 py-2.5 text-[13px] rounded-sm bg-gradient-to-r from-[#d4a337] to-[#ffd700] text-[#240a13] font-semibold transition-colors shadow-md cursor-pointer"
-              onClick={onOpenQr}
-            >
-              Enlarge QR Code <QrCode size={15} />
-            </button>
+              <button
+                className="gold-button inline-flex items-center gap-2 px-5 py-2.5 text-[13px] rounded-sm bg-gradient-to-r from-[#d4a337] to-[#ffd700] text-[#240a13] font-semibold transition-colors shadow-md cursor-pointer"
+                onClick={onOpenQr}
+              >
+                Enlarge QR Code <QrCode size={15} />
+              </button>
+            </div>
           </div>
-        </div>
         </div>
 
         <Image
@@ -504,47 +564,53 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
       </section>
 
       {/* SCENE 7: LIVE MUHURTHAM COUNTDOWN SCENE */}
-      <section className="film-scene countdown-scene" data-scene="countdown" aria-label="Counting down to the Muhurtham">
+      <section
+        className="film-scene countdown-scene"
+        data-scene="countdown"
+        aria-label="Counting down to the Muhurtham"
+      >
         <div className="paper-fill" />
         <div className="memories-ornament" aria-hidden="true">
-          <Image src="/art/gate.webp" alt="" width={1376} height={768} sizes="(max-width: 760px) 100vw, 100vw" loading="lazy" />
+          <Image
+            src="/art/gate.webp"
+            alt=""
+            width={1376}
+            height={768}
+            sizes="(max-width: 760px) 100vw, 100vw"
+            loading="lazy"
+          />
         </div>
 
         <div className="countdown-heading" data-layer="countdown-heading">
-          <span className="tracking-[0.25em] text-[#722F37] font-semibold drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] block text-[16px] md:text-[22px] mb-1">
+          <span className="tracking-[0.2em] text-[#722F37] font-semibold block text-[16px] md:text-[22px] mb-1 drop-shadow-[0_1px_1px_rgba(184,134,11,0.25)]">
             UNTIL THE SACRED MUHURTHAM
           </span>
-          <h2 className="my-2.5 text-[42px] md:text-[72px] text-[#FBCC13] font-normal leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            <em>Counting the days</em>
+          <h2 className="my-2.5 text-[42px] md:text-[72px] text-[#722F37] font-normal leading-tight">
+            <em className="not-italic [-webkit-text-stroke:0.1px_#ffd700]">
+              Counting the days
+            </em>
           </h2>
-          <p className="text-[#ffe082] text-[15px] md:text-[17px] mb-6 font-['Jost',sans-serif] font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+
+          <p className="text-[#d4a337] text-[15px] md:text-[17px] mb-6 font-['Jost',sans-serif] font-medium">
             Sunday, 1 November 2026 · 7:30 a.m. to 9:00 a.m. · IST
           </p>
           <WeddingCountdown />
 
           <div className="w-20 h-[1.5px] bg-[#ffd700] mx-auto my-6" />
 
-          <p className="text-[#ffffff] text-[14px] md:text-[15px] max-w-md mx-auto italic font-['Cormorant',Georgia,serif] text-[22px] drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
-            &ldquo;Two lives, two souls, united in love and blessed by divine grace.&rdquo;
+          <p className="text-[#38101c] text-[14px] md:text-[15px] max-w-md mx-auto italic font-['Cormorant',Georgia,serif] text-[22px]">
+            &ldquo;Two lives, two souls, united in love and blessed by divine
+            grace.&rdquo;
           </p>
         </div>
       </section>
 
-      {/* SCENE 8: REDESIGNED EDITORIAL CINEMATIC PHOTO GALLERY */}
-      <section
-        className="film-scene gallery-scene"
-        data-scene="gallery"
-        aria-label="Editorial Wedding Photo Gallery"
-        style={{ overflowY: 'auto' }}
-      >
-        <div className="paper-fill" />
-        <div className="relative z-10 w-full pt-10 pb-20">
-          <CinematicGallery />
-        </div>
-      </section>
-
       {/* SCENE 9: FINAL AUSPICIOUS BLESSING SCENE */}
-      <section className="film-scene final-scene" data-scene="final" aria-label="With compliments and save the date">
+      <section
+        className="film-scene final-scene"
+        data-scene="final"
+        aria-label="With compliments and save the date"
+      >
         <Image
           className="final-landscape art"
           data-layer="final-landscape"
@@ -557,61 +623,74 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr }: FilmStageProp
         />
 
         <div className="final-words-anchor" data-layer="final-words">
-        <div className="final-card">
-          <div className="final-rule" aria-hidden="true">
-            <i /><span>✦</span><i />
+          <div className="final-card">
+            <div className="final-rule" aria-hidden="true">
+              <i />
+              <span>✦</span>
+              <i />
+            </div>
+
+            <span className="final-kicker">WITH BEST COMPLIMENTS FROM</span>
+            <p className="final-hosts">
+              S. Aravind Kumar &amp; Sakthiya Aravind
+            </p>
+
+            <div className="final-divider" aria-hidden="true" />
+
+            <h2 className="final-title">
+              Our forever
+              <br />
+              begins <em>with you.</em>
+            </h2>
+
+            <p className="final-couple">
+              B.S. Karthikeyan <em className="text-[#ffd700]">&amp;</em> M. Divya Shree
+            </p>
+            <span className="final-date">
+              SUNDAY · 1 NOVEMBER 2026 · VILLUPURAM
+            </span>
+
+            <div className="final-rule small" aria-hidden="true">
+              <i />
+              <span>✦</span>
+              <i />
+            </div>
+
+            <div className="final-actions">
+              <a
+                className="final-btn final-btn-outline"
+                href="/wedding.ics"
+                download="karthikeyan-divyashree-wedding.ics"
+              >
+                <CalendarDays size={16} aria-hidden="true" />
+                <span>Save to Calendar</span>
+              </a>
+              <a
+                className="final-btn final-btn-gold"
+                href="/invitation.jpeg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FileText size={16} aria-hidden="true" />
+                <span>View Invitation</span>
+              </a>
+            </div>
+
+            <small className="final-venue">
+              Jayam Mahal Thirumana Mandapam · Villupuram, Tamil Nadu
+            </small>
           </div>
-
-          <span className="final-kicker">WITH BEST COMPLIMENTS FROM</span>
-          <p className="final-hosts">S. Aravind Kumar &amp; Sakthiya Aravind</p>
-
-          <div className="final-divider" aria-hidden="true" />
-
-          <h2 className="final-title">
-            Our forever
-            <br />
-            begins <em>with you.</em>
-          </h2>
-
-          <p className="final-couple">
-            B.S. Karthikeyan <em>&amp;</em> M. Divya Shree
-          </p>
-          <span className="final-date">SUNDAY · 1 NOVEMBER 2026 · VILLUPURAM</span>
-
-          <div className="final-rule small" aria-hidden="true">
-            <i /><span>✦</span><i />
-          </div>
-
-          <div className="final-actions">
-            <a
-              className="final-btn final-btn-outline"
-              href="/wedding.ics"
-              download="karthikeyan-divyashree-wedding.ics"
-            >
-              <CalendarDays size={16} aria-hidden="true" />
-              <span>Save to Calendar</span>
-            </a>
-            <a
-              className="final-btn final-btn-gold"
-              href="/invitation.jpeg"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FileText size={16} aria-hidden="true" />
-              <span>View Invitation</span>
-            </a>
-          </div>
-
-          <small className="final-venue">Jayam Mahal Thirumana Mandapam · Villupuram, Tamil Nadu</small>
         </div>
-        </div>
 
-        <p className="tap-hint final-hint text-[#ffffff] drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]" aria-hidden="true">
+        <p
+          className="tap-hint final-hint text-[#ffffff] drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]"
+          aria-hidden="true"
+        >
           Tap anywhere to scatter lotus petals &amp; bless the couple
         </p>
       </section>
     </main>
-  )
+  );
 })
 
 export default function Page() {
@@ -620,7 +699,22 @@ export default function Page() {
   const reducedMotionRef = useRef(false)
 
   const [isReady, setIsReady] = useState(false)
-  const [activeEventIndex, setActiveEventIndex] = useState<number | null>(null)
+  const [activeEventIndex, setActiveEventIndex] = useState(0)
+  const [eventDialogOpen, setEventDialogOpen] = useState(false)
+  const [eventTouchStartX, setEventTouchStartX] = useState(0)
+
+  const handleEventTouchStart = (e: React.TouchEvent) => {
+    setEventTouchStartX(e.touches[0].clientX)
+  }
+
+  const handleEventTouchEnd = (e: React.TouchEvent) => {
+    const endX = e.changedTouches[0].clientX
+    const diff = eventTouchStartX - endX
+    if (Math.abs(diff) > 40) {
+      setActiveEventIndex((prev) => Math.max(0, Math.min(1, prev + (diff > 0 ? 1 : -1))))
+    }
+  }
+
   const [qrModalOpen, setQrModalOpen] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
   const [currentProgress, setCurrentProgress] = useState(0)
@@ -845,15 +939,13 @@ export default function Page() {
       activeScenes.clear()
       setCurrentProgress(progress)
 
-      computeScene('opening', 0, 0, 0.12, 0.18, progress)
-      computeScene('gate', 0.10, 0.15, 0.22, 0.28, progress)
-      computeScene('events', 0.21, 0.26, 0.33, 0.39, progress)
-      computeScene('couple', 0.32, 0.37, 0.44, 0.50, progress)
-      computeScene('portrait', 0.43, 0.48, 0.55, 0.61, progress)
-      computeScene('venue', 0.54, 0.59, 0.66, 0.72, progress)
-      computeScene('countdown', 0.65, 0.70, 0.77, 0.83, progress)
-      computeScene('gallery', 0.76, 0.81, 0.88, 0.94, progress)
-      computeScene('final', 0.87, 0.93, 1, 1.01, progress)
+      computeScene('opening', 0, 0, 0.12, 0.20, progress)
+      computeScene('gate', 0.12, 0.18, 0.42, 0.48, progress)
+      computeScene('events', 0.28, 0.33, 0.50, 0.56, progress)
+      computeScene('couple', 0.46, 0.49, 0.74, 0.80, progress)
+      computeScene('venue', 0.66, 0.72, 0.86, 0.92, progress)
+      computeScene('countdown', 0.78, 0.82, 0.94, 1.00, progress)
+      computeScene('final', 0.88, 0.92, 1.00, 1.06, progress)
 
       // Identify dominant scene
       let dominant = 'opening'
@@ -862,10 +954,8 @@ export default function Page() {
         'gate',
         'events',
         'couple',
-        'portrait',
         'venue',
         'countdown',
-        'gallery',
         'final',
       ]) {
         if (activeScenes.has(sc) && Math.abs(sceneOffsets[sc] ?? 999) <= 50) {
@@ -928,96 +1018,59 @@ export default function Page() {
       )
       transformLayer('event-surround', 0, reduced ? 0 : 2 - norm(progress, 0.22, 0.35) * 4)
 
-      if (activeScenes.has('events')) {
-        const slide = smooth(norm(progress, 0.27, 0.31))
-        eventArticles.forEach((article, idx) => {
-          const isCurrent = idx === (slide < 0.5 ? 0 : 1)
-          if (article.inert === isCurrent) {
-            article.inert = !isCurrent
-          }
-        })
-        const reel = layerMap['event-reel']
-        if (reel) {
-          setFastStyle(reel, 'transform', `translate3d(${(-slide * 50).toFixed(4)}%,0,0)`)
-        }
-        const pip1 = layerMap['pip-one']
-        const pip2 = layerMap['pip-two']
-        if (pip1) setFastStyle(pip1, 'opacity', (1 - slide * 0.65).toFixed(4))
-        if (pip2) setFastStyle(pip2, 'opacity', (0.35 + slide * 0.65).toFixed(4))
-      }
-
       // Couple Scene
-      transformLayer('blessing-controls', 0, 0, 1, 0, norm(progress, 0.35, 0.38))
+      transformLayer('blessing-controls', 0, 0, 1, 0, norm(progress, 0.46, 0.50))
       transformLayer(
         'couple-heading',
         0,
-        reduced ? 0 : 8 - norm(progress, 0.33, 0.42) * 10,
+        reduced ? 0 : 8 - norm(progress, 0.46, 0.49) * 10,
         1,
         0,
-        norm(progress, 0.32, 0.36)
+        norm(progress, 0.46, 0.49) * (1 - norm(progress, 0.66, 0.70))
       )
       transformLayer(
         'couple-temple',
         0,
-        reduced ? 0 : 16 - norm(progress, 0.33, 0.45) * 35,
-        1 + norm(progress, 0.33, 0.45) * 0.1
+        reduced ? 0 : 16 - norm(progress, 0.46, 0.66) * 35,
+        1 + norm(progress, 0.46, 0.55) * 0.1
       )
       transformLayer(
         'illustrated-couple',
         0,
-        reduced ? 0 : 55 - norm(progress, 0.33, 0.43) * 72,
-        reduced ? 1 : 0.8 + norm(progress, 0.33, 0.43) * 0.23
+        reduced ? 0 : 55 - norm(progress, 0.46, 0.49) * 72,
+        reduced ? 1 : 0.8 + norm(progress, 0.46, 0.49) * 0.23
       )
-
-      // Portrait Scene (Meet the Bride & Groom)
-      transformLayer(
-        'portrait-intro',
-        0,
-        reduced ? 0 : 8 - norm(progress, 0.44, 0.54) * 12,
-        1,
-        0,
-        norm(progress, 0.43, 0.47) * (1 - norm(progress, 0.56, 0.60))
-      )
-      transformLayer(
-        'gold-portrait',
-        0,
-        reduced ? 0 : 40 - norm(progress, 0.44, 0.53) * 44,
-        reduced ? 1 : 0.92 + norm(progress, 0.45, 0.54) * 0.08,
-        0,
-        norm(progress, 0.43, 0.47) * (1 - norm(progress, 0.56, 0.60))
-      )
-      transformLayer('temple-procession', 0, reduced ? 0 : 45 - norm(progress, 0.45, 0.55) * 61, 1.1)
 
       // Venue Scene
       transformLayer(
         'venue-copy',
         0,
-        reduced ? 0 : 14 - norm(progress, 0.55, 0.65) * 25,
+        reduced ? 0 : 14 - norm(progress, 0.66, 0.92) * 25,
         1,
         0,
-        norm(progress, 0.54, 0.58) * (1 - norm(progress, 0.67, 0.71))
+        norm(progress, 0.66, 0.71) * (1 - norm(progress, 0.87, 0.92))
       )
-      transformLayer('venue-temple', 0, reduced ? 0 : 35 - norm(progress, 0.56, 0.67) * 47, 1)
+      transformLayer('venue-temple', 0, reduced ? 0 : 35 - norm(progress, 0.66, 0.92) * 47, 1)
 
       // Countdown Scene
       transformLayer(
         'countdown-heading',
         0,
-        reduced ? 0 : 12 - norm(progress, 0.66, 0.76) * 20,
+        reduced ? 0 : 12 - norm(progress, 0.78, 1.00) * 20,
         1,
         0,
-        norm(progress, 0.65, 0.69) * (1 - norm(progress, 0.78, 0.82))
+        norm(progress, 0.78, 0.83) * (1 - norm(progress, 0.95, 1.00))
       )
 
       // Final Scene
-      transformLayer('final-landscape', 0, reduced ? 0 : 12 - norm(progress, 0.89, 0.99) * 12, 1.02)
+      transformLayer('final-landscape', 0, reduced ? 0 : 12 - norm(progress, 0.88, 1.06) * 12, 1.02)
       transformLayer(
         'final-words',
         0,
-        reduced ? 0 : 12 - norm(progress, 0.90, 0.98) * 12,
+        reduced ? 0 : 12 - norm(progress, 0.88, 1.06) * 12,
         1,
         0,
-        norm(progress, 0.89, 0.93)
+        norm(progress, 0.88, 0.93) * (1 - norm(progress, 1.01, 1.06))
       )
     }
 
@@ -1103,7 +1156,7 @@ export default function Page() {
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerdown', onPointerDown)
       document.documentElement.removeEventListener('pointerleave', resetParallax)
-      document.addEventListener('visibilitychange', onVisibility)
+      document.removeEventListener('visibilitychange', onVisibility)
       mediaQuery.removeEventListener('change', onMotionPreferenceChange)
     }
   }, [])
@@ -1127,15 +1180,19 @@ export default function Page() {
       {/* Cinematic Film Preloader with Karthik & Divya Monogram */}
       <div className="film-loader" aria-hidden={isReady}>
         <span className="loader-monogram text-[#ffd700]">
-          k<em>&amp;</em>d
+          K<em>&amp;</em>D
         </span>
-        <div style={{ background: '#ffd700' }} />
-        <span className="eyebrow text-[#ffffff] tracking-[0.25em]">UNFOLDING OUR WEDDING STORY</span>
+        <div style={{ background: '#722f37' }} />
+        <span className="eyebrow text-[#722f37] tracking-[0.25em]">UNFOLDING OUR WEDDING STORY</span>
       </div>
 
       {/* Main Invitation Stage */}
       <FilmStage
-        onDetails={(idx) => setActiveEventIndex(idx)}
+        onDetails={(idx) => { setActiveEventIndex(idx); setEventDialogOpen(true) }}
+        activeEventIndex={activeEventIndex}
+        onEventSlide={setActiveEventIndex}
+        onEventTouchStart={handleEventTouchStart}
+        onEventTouchEnd={handleEventTouchEnd}
         onOpenQr={() => setQrModalOpen(true)}
       />
 
@@ -1146,7 +1203,7 @@ export default function Page() {
       <CelebrationCanvas disabled={reducedMotion} />
 
       {/* Virtual Scroll Track for 1800svh Experience */}
-      <div className="scroll-track" style={{ height: '1800svh' }} aria-hidden="true" />
+        <div className="scroll-track" style={{ height: '1500svh' }} aria-hidden="true" />
 
       {/* Floating Monogram Return-To-Top Link */}
       <a
@@ -1160,13 +1217,13 @@ export default function Page() {
           boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
         }}
       >
-        k<em className="text-[#ffffff]">&amp;</em>d
+        K<em className="text-[#ffffff]">&amp;</em>D
       </a>
 
       {/* Event Details Modal Dialog */}
       <EventsDialog
-        eventIndex={activeEventIndex}
-        onClose={() => setActiveEventIndex(null)}
+        eventIndex={eventDialogOpen ? activeEventIndex : null}
+        onClose={() => setEventDialogOpen(false)}
       />
 
       {/* Google Maps Location QR Code Modal */}

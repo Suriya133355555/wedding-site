@@ -12,13 +12,11 @@ export function ScrollGuide({ progress, onScrollNext }: ScrollGuideProps) {
 
   const getGuideText = (p: number) => {
     if (p < 0.12) return 'Scroll to unfold our wedding invitation'
-    if (p < 0.23) return 'Scroll to view auspicious ceremonies'
-    if (p < 0.35) return 'Scroll to bless the bride & groom'
-    if (p < 0.46) return 'Scroll to meet Karthikeyan & Divya Shree'
-    if (p < 0.57) return 'Scroll for venue & Google Maps directions'
-    if (p < 0.68) return 'Scroll for the live Muhurtham countdown'
-    if (p < 0.80) return 'Scroll to view our photo gallery'
-    if (p < 0.92) return 'Scroll to send blessings & compliments'
+    if (p < 0.28) return 'Scroll to view celebrations & ceremonies'
+    if (p < 0.46) return 'Scroll to send blessings'
+    if (p < 0.67) return 'Scroll for venue & Google Maps directions'
+    if (p < 0.78) return 'Scroll for the live Muhurtham countdown'
+    if (p < 0.90) return 'Scroll to share our joy'
     return 'Return to top · Blessed beginning'
   }
 
