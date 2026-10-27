@@ -941,7 +941,7 @@ export default function Page() {
 
       computeScene('opening', 0, 0, 0.12, 0.20, progress)
       computeScene('gate', 0.12, 0.18, 0.42, 0.48, progress)
-      computeScene('events', 0.28, 0.33, 0.50, 0.56, progress)
+      computeScene('events', 0.28, 0.33, 0.60, 0.66, progress)
       computeScene('couple', 0.46, 0.49, 0.74, 0.80, progress)
       computeScene('venue', 0.66, 0.72, 0.86, 0.92, progress)
       computeScene('countdown', 0.78, 0.82, 0.94, 1.00, progress)
@@ -1000,23 +1000,18 @@ export default function Page() {
         reduced ? 0 : 8 - norm(progress, 0.11, 0.23) * 12,
         1,
         0,
-        norm(progress, 0.10, 0.14) * (1 - norm(progress, 0.23, 0.27))
+        norm(progress, 0.10, 0.14)
       )
       transformLayer(
         'gate-frame',
         0,
         reduced ? 0 : -norm(progress, 0.14, 0.25) * 6,
-        1 + norm(progress, 0.12, 0.25) * 0.05
+        1 + norm(progress, 0.12, 0.25) * 0.05,
+        0,
+        1
       )
 
-      // Events Reel
-      transformLayer(
-        'event-window',
-        0,
-        reduced ? 0 : 3 - norm(progress, 0.24, 0.35) * 6,
-        reduced ? 1 : 0.99 + norm(progress, 0.24, 0.35) * 0.02
-      )
-      transformLayer('event-surround', 0, reduced ? 0 : 2 - norm(progress, 0.22, 0.35) * 4)
+      // Events Reel — positioning handled entirely by computeScene
 
       // Couple Scene
       transformLayer('blessing-controls', 0, 0, 1, 0, norm(progress, 0.46, 0.50))
