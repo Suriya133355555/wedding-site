@@ -154,7 +154,7 @@ const FilmStage = memo(function FilmStage({ onDetails, onOpenQr, activeEventInde
             WITH THE BLESSINGS OF OUR FAMILIES
           </p>
           <h1 className="my-3 text-[#722f37] drop-shadow-[0_4px_18px_rgba(0,0,0,0.8)]">
-            Karthikeyan<span className="text-[#ffd700]">&amp;</span>Divya Shree
+            B.S. Karthikeyan<span className="text-[#ffd700]">&amp;</span>M. Divya Shree
           </h1>
           <p className="opening-date text-[18px] md:text-[20px] font-semibold tracking-wide text-[#ffd700] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
             Reception: Saturday, 31 October 2026 · 6:00 pm onwards
@@ -1133,8 +1133,11 @@ export default function Page() {
     document.addEventListener('visibilitychange', onVisibility)
     mediaQuery.addEventListener('change', onMotionPreferenceChange)
 
+    let readyTimeout: number | undefined
     if (isRunning) {
-      setIsReady(true)
+      readyTimeout = window.setTimeout(() => {
+        if (isRunning) setIsReady(true)
+      }, 1500)
       updateDimensions()
     }
 
@@ -1144,6 +1147,7 @@ export default function Page() {
       isRunning = false
       cancelAnimationFrame(rafId)
       clearTimeout(touchResetTimeout)
+      if (readyTimeout !== undefined) window.clearTimeout(readyTimeout)
       window.removeEventListener('resize', updateDimensions)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('wheel', onWheel)
@@ -1177,8 +1181,8 @@ export default function Page() {
         <span className="loader-monogram text-[#ffd700]">
           K<em>&amp;</em>D
         </span>
-        <div style={{ background: '#722f37' }} />
-        <span className="eyebrow text-[#722f37] tracking-[0.25em]">UNFOLDING OUR WEDDING STORY</span>
+        <div style={{ background: '#ffd700' }} />
+        <span className="eyebrow text-[#ffd700] tracking-[0.25em]">UNFOLDING OUR WEDDING STORY</span>
       </div>
 
       {/* Main Invitation Stage */}
